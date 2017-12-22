@@ -599,9 +599,9 @@
 ; Log a syntax deprecation, attributing it to current-filename and the line
 ; number of the stream `s`
 (define (parser-depwarn s what instead)
-  (syntax-deprecation- what instead current-filename
-                       (if (number? s) s (input-port-line (if (port? s) s (ts:port s))))
-                       #t))
+  (let ((line (if (number? s) s (input-port-line (if (port? s) s (ts:port s)))))
+        (file current-filename))
+    (frontend-depwarn (format-syntax-deprecation what instead file line #t) file line)))
 
 ;; --- parser ---
 

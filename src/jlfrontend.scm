@@ -101,7 +101,7 @@
                                                error incomplete))
                       (and (eq? (car e) 'global) (every symbol? (cdr e))))))
          (if (underscore-symbol? e)
-             (syntax-deprecation "underscores as an rvalue" ""))
+             (syntax-deprecation "underscores as an rvalue" "" #f))
          e)
         (else
          (let ((last *in-expand*))
@@ -223,13 +223,23 @@
 ; Utilities for logging messages from the frontend, in a way which can be
 ; controlled from julia code.
 
-; Log a syntax deprecation from an unknown location
-(define (syntax-deprecation what instead)
-  (syntax-deprecation- what instead 'none 0 #f))
+; Log a general deprecation message at line node location `lno`
+(define (deprecation-message msg lno)
+  (let* ((lf (extract-line-file lno)) (line (car lf)) (file (cadr lf)))
+    (frontend-depwarn msg file line)))
 
-(define (syntax-deprecation- what instead file line exactloc)
-    (frontend-depwarn (format-syntax-deprecation what instead file line exactloc)
-                      file line))
+; Log a syntax deprecation from line node location `lno`
+(define (syntax-deprecation what instead lno)
+  (let* ((lf (extract-line-file lno)) (line (car lf)) (file (cadr lf)))
+    (deprecation-message (format-syntax-deprecation what instead file line #f) lno)))
+
+; Extract line and file from a line number node, defaulting to (0, none)
+; respectively if lno is absent (`#f`) or doesn't contain a file
+(define (extract-line-file lno)
+  (cond ((or (not lno) (null? lno)) '(0 none))
+        ((not (eq? (car lno) 'line)) (error "lno is not a line number node"))
+        ((length= lno 2) `(,(cadr lno) none))
+        (else (cdr lno))))
 
 (define (format-syntax-deprecation what instead file line exactloc)
   (string "Deprecated syntax `" what "`"
@@ -241,10 +251,11 @@
             (string #\newline "Use `" instead "` instead."))))
 
 ; Corresponds to --depwarn 0="no", 1="yes", 2="error"
-(define *depwarn-opt* 0)
+(define *depwarn-opt* 1)
 
 ; Emit deprecation warning via julia logging layer.
 (define (frontend-depwarn msg file line)
-  (if (eq? *depwarn-opt* 2)
-      (error msg)
-      (julia-logmsg *depwarn-opt* 'depwarn (symbol (string file line)) file line msg)))
+  ; (display (string msg "; file = " file "; line = " line #\newline)))
+  (case *depwarn-opt*
+    (1 (julia-logmsg 1000 'depwarn (symbol (string file line)) file line msg))
+    (2 (error msg))))
