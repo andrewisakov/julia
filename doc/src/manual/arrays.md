@@ -1,33 +1,20 @@
-# [Multi-dimensional Arrays](@id man-multi-dim-arrays)
+# [Многомерные массивы](@id man-multi-dim-arrays)
 
-Julia, like most technical computing languages, provides a first-class array implementation. Most
-technical computing languages pay a lot of attention to their array implementation at the expense
-of other containers. Julia does not treat arrays in any special way. The array library is implemented
-almost completely in Julia itself, and derives its performance from the compiler, just like any
-other code written in Julia. As such, it's also possible to define custom array types by inheriting
-from [`AbstractArray`](@ref). See the [manual section on the AbstractArray interface](@ref man-interface-array) for more details
-on implementing a custom array type.
+Julia, как и большинство языков, предоставляет первоклассную реализацию массивов. Большинство языков уделяют много внимания обработке массивов и их хранению. Julia не рассматривает массивы как что-то особенное. Поддержка массивов реализована максимально полно, и производительность их обработки мало отличается от остального в Julia. Возможно описать любой массив, унаследовав его от [`AbstractArray`](@ref). См. [раздел AbstractArray](@ref man-interface-array) для реализации любого типа массива.
 
-An array is a collection of objects stored in a multi-dimensional grid. In the most general case,
-an array may contain objects of type `Any`. For most computational purposes, arrays should contain
-objects of a more specific type, such as [`Float64`](@ref) or [`Int32`](@ref).
+Массив - это коллекция объектов, хранимых в многомерной сетке. В большинстве случаев массив может объекты типа `Any`. Для вычислительных применений массив должен содержать объекты более специфичного типа, например [`Float64`](@ref) или [`Int32`](@ref).
 
-In general, unlike many other technical computing languages, Julia does not expect programs to
-be written in a vectorized style for performance. Julia's compiler uses type inference and generates
-optimized code for scalar array indexing, allowing programs to be written in a style that is convenient
-and readable, without sacrificing performance, and using less memory at times.
+Обычно, в отличие от других языков, Julia не ожидает, что программа пишется 
+в векторном стиле для производительности. Компилятор Julia использует вывод типа и генерирует
+оптимизированный код для скалярной индексации массива, позволяя писать программы в удобном и читабельном виде, не жертвуя производительностью, и минимизируя требования к памяти.
 
-In Julia, all arguments to functions are passed by reference. Some technical computing languages
-pass arrays by value, and this is convenient in many cases. In Julia, modifications made to input
-arrays within a function will be visible in the parent function. The entire Julia array library
-ensures that inputs are not modified by library functions. User code, if it needs to exhibit similar
-behavior, should take care to create a copy of inputs that it may modify.
+Все параметры функций в Julia передаются по ссылкам. Некоторые языки передают массивы по значению (копируют) и в большинстве случаев это удобнее. В Julia измненения, выполненные в переданном в функцию массиве видны и в вызвавшем контексте. Системная библиотека для работы с массивами в Julia гарантирует неизменность массива. При программировании своих функций следует побеспокоиться копированием массива, если вы хотите такого же поведения.
 
-## Arrays
+## Массивы
 
-### Basic Functions
+### Базовые функции
 
-| Function               | Description                                                                      |
+| Функция                | Описание                                                                         |
 |:---------------------- |:-------------------------------------------------------------------------------- |
 | [`eltype(A)`](@ref)    | the type of the elements contained in `A`                                        |
 | [`length(A)`](@ref)    | the number of elements in `A`                                                    |
