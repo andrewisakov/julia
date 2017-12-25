@@ -1,15 +1,10 @@
-# Complex and Rational Numbers
+# Комплексные и рациональные числа
 
-Julia ships with predefined types representing both complex and rational numbers, and supports
-all standard [Mathematical Operations and Elementary Functions](@ref) on them. [Conversion and Promotion](@ref conversion-and-promotion) are defined
-so that operations on any combination of predefined numeric types, whether primitive or composite,
-behave as expected.
+Julia предоставляет втроенные типы для комплексных и рациональных чисел, и поддерживает все стандарты [Математические операции и элементарные функции](@ref). [Преобразование и приведение](@ref conversion-and-promotion) предписывает, что операции на любых комбинациях таких типов, и простых, и комплексных, будут вести себя так как ожидается.
 
-## Complex Numbers
+## Комплексные числа
 
-The global constant [`im`](@ref) is bound to the complex number *i*, representing the principal
-square root of -1. It was deemed harmful to co-opt the name `i` for a global constant, since it
-is such a popular index variable name. Since Julia allows numeric literals to be [juxtaposed with identifiers as coefficients](@ref man-numeric-literal-coefficients),
+Глобальная константа [`im`](@ref) включает в себя комплексное *i*, являющееся корнем квадратным от -1. Это могло бы быть просто `i` но это плохая идея, ибо эта буква популярна для индексов в массивах и циклах. Since Julia allows numeric literals to be [juxtaposed with identifiers as coefficients](@ref man-numeric-literal-coefficients),
 this binding suffices to provide convenient syntax for complex numbers, similar to the traditional
 mathematical notation:
 
@@ -18,7 +13,7 @@ julia> 1 + 2im
 1 + 2im
 ```
 
-You can perform all the standard arithmetic operations with complex numbers:
+Вы можете выполнять любые операции над комплексными числами:
 
 ```jldoctest
 julia> (1 + 2im)*(2 - 3im)
@@ -52,7 +47,7 @@ julia> 3(2 - 5im)^-1.0
 0.20689655172413796 + 0.5172413793103449im
 ```
 
-The promotion mechanism ensures that combinations of operands of different types just work:
+Механизм приведения типов:
 
 ```jldoctest
 julia> 2(1 - 1im)
